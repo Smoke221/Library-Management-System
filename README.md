@@ -69,7 +69,7 @@ Explore the capabilities of our Library Management System, where organization me
 
 ## 5. API Documentation
 
-For a comprehensive API experience, consult our detailed [Swagger Documentation](https://library-management-api.example.com/api-docs/).
+For a comprehensive API experience, consult our detailed [Swagger Documentation](https://library-managemnet-system.onrender.com/api-docs/).
 
 ## 6. Running the Project
 
@@ -105,5 +105,9 @@ To maintain server stability and prevent abuse of the API, rate limiting has bee
 Please adhere to the rate limits to ensure a smooth experience for all users. If you encounter rate-limiting responses, wait for the specified time frame before making additional requests.
 
 ---
+
+Sample of Swagger Documentation
+![Screenshot (213)](https://github.com/Smoke221/Library-Management-System/assets/114225283/0b0001df-2bef-4dff-987b-648193b365bc)
+
 
 This README serves as your gateway to efficient library management. Dive into the API documentation and make the most of our Library Management System.
