@@ -4,7 +4,7 @@ const { userModel } = require("../models/userModel");
 
 async function createBook(req, res) {
   try {
-    const { ISBN, title, author, publishedYear, quantity } = req.body;
+    const { ISBN, title, author, publishedYear, quantity, genre } = req.body;
 
     // Check if the ISBN already exists in the database
     const existingBook = await bookModel.findOne({ ISBN });
@@ -22,6 +22,7 @@ async function createBook(req, res) {
       author,
       publishedYear,
       quantity,
+      genre,
     });
 
     // Save the book document to the database
@@ -38,7 +39,7 @@ async function createBook(req, res) {
 async function updateBook(req, res) {
   try {
     const { ISBN } = req.params;
-    const { title, author, publishedYear, quantity } = req.body;
+    const { title, author, publishedYear, quantity, genre } = req.body;
 
     // Find the book by ISBN
     const book = await bookModel.findOne({ ISBN });
@@ -52,6 +53,7 @@ async function updateBook(req, res) {
     book.author = author || book.author;
     book.publishedYear = publishedYear || book.publishedYear;
     book.quantity = quantity || book.quantity;
+    book.genre = genre || book.genre;
 
     // Save the updated book document
     await book.save();
@@ -89,8 +91,18 @@ async function deleteBook(req, res) {
 
 async function listBooks(req, res) {
   try {
-    // Find all books
-    const books = await bookModel.find();
+    // Parse query parameters for pagination
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if page is not provided
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size to 10 if not provided
+
+    // Calculate the number of documents to skip
+    const skip = (page - 1) * pageSize;
+
+    // Query the database to get paginated books
+    const books = await bookModel
+      .find()
+      .skip(skip)
+      .limit(pageSize);
 
     res.status(200).json(books);
   } catch (error) {
@@ -98,6 +110,7 @@ async function listBooks(req, res) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
 
 async function borrowBook(req, res) {
   try {

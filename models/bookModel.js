@@ -22,6 +22,10 @@ const bookSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  genre: {
+    type: String,
+    required: true
+  },
   borrowDetails: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,

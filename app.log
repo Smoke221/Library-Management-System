@@ -2,3 +2,11 @@
 2023-10-06T08:08:05.424Z [INFO]: User 651fadae0bc17bfa682483f7 borrowed book 651fb95e42981de1fff60945
 2023-10-06T08:15:34.268Z [ERROR]: Login failed for user with email likitha@gmail.com. Wrong password.
 2023-10-06T08:15:50.912Z [INFO]: User with email likitha@gmail.com logged in.
+2023-10-06T10:13:48.407Z [INFO]: User with email likitha@gmail.com logged in.
+2023-10-06T10:36:53.389Z [ERROR]: Login failed. User with email likitha@gmail.com not found.
+2023-10-06T10:37:22.715Z [INFO]: New user registered with email likitha@gmail.com
+2023-10-06T10:37:33.418Z [INFO]: User with email likitha@gmail.com logged in.
+2023-10-06T10:38:18.112Z [INFO]: User 651fe3620b4dae8a7cd26962 borrowed book 651fdf454c5fbae0aa5eb0b9
+2023-10-06T10:38:49.310Z [INFO]: User 651fe3620b4dae8a7cd26962 borrowed book 651fdf8d4c5fbae0aa5eb0c6
+2023-10-06T10:39:05.721Z [INFO]: User 651fe3620b4dae8a7cd26962 borrowed book 651fdf954c5fbae0aa5eb0c9
+2023-10-06T10:42:22.478Z [INFO]: User with email likitha@gmail.com logged in.
