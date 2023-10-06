@@ -16,7 +16,6 @@ Welcome to the Library Management System API, your portal to efficient library o
 4. [API Endpoints](#4-api-endpoints)
    - [User](#user-model)
    - [Books](#books-model)
-   - [Borrowing](#borrowing-model)
 5. [API Documentation](#5-api-documentation)
 6. [Running the Project](#6-running-the-project)
 
