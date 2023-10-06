@@ -2,6 +2,25 @@ const { logger } = require("../middlewares/logger");
 const { bookModel } = require("../models/bookModel");
 const { userModel } = require("../models/userModel");
 
+/**
+ * @swagger
+ * /book/create:
+ *   post:
+ *     summary: Create a new book
+ *     tags:
+ *       - Books
+ *     security:
+ *       - bearerAuth: []  # Use the authentication token
+ *     responses:
+ *       201:
+ *         description: Book created successfully
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to create books
+ *       500:
+ *         description: Internal server error
+ */
 async function createBook(req, res) {
   try {
     const { ISBN, title, author, publishedYear, quantity, genre } = req.body;
@@ -36,6 +55,34 @@ async function createBook(req, res) {
   }
 }
 
+/**
+ * @swagger
+ * /book/update/{ISBN}:
+  *   put:
+ *     summary: Update book details by ISBN
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: ISBN
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ISBN of the book to update
+ *     security:
+ *       - bearerAuth: []  # Use the authentication token
+ *     responses:
+ *       200:
+ *         description: Book details updated successfully
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to update books
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Internal server error
+ */
 async function updateBook(req, res) {
   try {
     const { ISBN } = req.params;
@@ -66,6 +113,34 @@ async function updateBook(req, res) {
   }
 }
 
+/**
+ * @swagger
+ * /book/delete/{ISBN}:
+ *   delete:
+ *     summary: Delete a book by ISBN
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: ISBN
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ISBN of the book to delete
+ *     security:
+ *       - bearerAuth: []  # Use the authentication token
+ *     responses:
+ *       200:
+ *         description: Book deleted successfully
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to delete books
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Internal server error
+ */
 async function deleteBook(req, res) {
   try {
     const { ISBN } = req.params;
@@ -88,7 +163,38 @@ async function deleteBook(req, res) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-
+/**
+ * @swagger
+ * /book/list:
+ *   get:
+ *     summary: Get a list of books with pagination
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Page number (default is 1)
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Number of items per page (default is 10)
+ *     responses:
+ *       200:
+ *         description: A list of books
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/book'  # Reference to the Book schema
+ *       500:
+ *         description: Internal server error
+ */
 async function listBooks(req, res) {
   try {
     // Parse query parameters for pagination
@@ -111,7 +217,48 @@ async function listBooks(req, res) {
   }
 }
 
-
+/**
+ * @swagger
+ * /book/borrow/{bookId}:
+ *   post:
+ *     summary: Borrow a book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the book to borrow
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userID:
+ *                 type: string
+ *                 description: The ID of the user borrowing the book
+ *             example:
+ *               userID: "user123"  # Replace with an actual user ID
+ *     security:
+ *       - bearerAuth: []  # Use the authentication token 
+ *     responses:
+ *       200:
+ *         description: Book borrowed successfully
+ *       400:
+ *         description: Bad request, user has reached borrowing limit, book not available, or book already borrowed
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to borrow books
+ *       404:
+ *         description: Book or user not found
+ *       500:
+ *         description: Internal server error
+ */
 async function borrowBook(req, res) {
   try {
     const userId = req.body.userID; // Get the user ID from the auth middleware
@@ -171,6 +318,48 @@ async function borrowBook(req, res) {
   }
 }
 
+/**
+ * @swagger
+ * /book/return/{bookId}:
+ *   patch:
+ *     summary: Return a borrowed book
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the book to return
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userID:
+ *                 type: string
+ *                 description: The ID of the user returning the book
+ *             example:
+ *               userID: "user123"  # Replace with an actual user ID
+ *     security:
+ *       - bearerAuth: []  # Use the authentication token
+ *     responses:
+ *       200:
+ *         description: Book returned successfully
+ *       400:
+ *         description: Bad request, user has not borrowed the book
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to return books
+ *       404:
+ *         description: Book or user not found
+ *       500:
+ *         description: Internal server error
+ */
 async function returnBook(req, res) {
   try {
     const userId = req.body.userID; // Get the user ID from the auth middleware
@@ -214,6 +403,36 @@ async function returnBook(req, res) {
   }
 }
 
+/**
+ * @swagger
+ * /book/search:
+ *   get:
+ *     summary: Search for books by title, author, or ISBN
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The search query for books (title, author, or ISBN)
+ *     responses:
+ *       200:
+ *         description: A list of books matching the search query
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Book'  # Reference to the Book schema
+ *       401:
+ *         description: Unauthorized, authentication token is missing or invalid
+ *       403:
+ *         description: Forbidden, the user does not have permission to search for books
+ *       500:
+ *         description: Internal server error
+ */
 async function searchBooks(req, res) {
   try {
     const { query } = req.query;

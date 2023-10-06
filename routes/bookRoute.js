@@ -16,7 +16,7 @@ const bookRouter = express.Router();
 bookRouter.post("/create", authenticate, authorize("admin"), createBook);
 bookRouter.put("/update/:ISBN", authenticate, authorize("admin"), updateBook);
 bookRouter.delete("/delete/:ISBN", authenticate, authorize("admin"), deleteBook);
-bookRouter.get("/books", listBooks);
+bookRouter.get("/list", listBooks);
 
 bookRouter.post("/borrow/:bookId", authenticate, otherLimiter, borrowBook);
 bookRouter.patch("/return/:bookId", authenticate, returnBook);

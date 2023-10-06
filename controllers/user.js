@@ -3,6 +3,40 @@ const jwt = require("jsonwebtoken");
 const { userModel } = require("../models/userModel");
 const { logger } = require("../middlewares/logger");
 
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: User's name
+ *               email:
+ *                 type: string
+ *                 description: User's email
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *               role:
+ *                 type: string
+ *                 description: User's role (e.g., 'user' or 'admin')
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Internal server error
+ */
 async function userRegister(req, res) {
   try {
     const { name, email, password, role } = req.body;
@@ -35,7 +69,45 @@ async function userRegister(req, res) {
       .json({ message: "Internal server error", error: err.message });
   }
 }
-
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: User login
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: User's email
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Success message
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *       401:
+ *         description: Wrong credentials or wrong password
+ *       500:
+ *         description: Internal server error
+ */
 async function userLogin(req, res) {
   try {
     const { email, password } = req.body;
