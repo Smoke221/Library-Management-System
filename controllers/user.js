@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { userModel } = require("../models/userModel");
+const { logger } = require("../middlewares/logger");
 
 
 async function userRegister(req, res) {
@@ -15,6 +16,7 @@ async function userRegister(req, res) {
 
     if (isExisting) {
       // User with the same email already exists, return an error.
+      logger.error(`User registration failed. User with email ${email} already exists.`);
       res.status(400).json({ message: "User already exists, please login" });
     } else {
       // Create a new user document with the hashed password.
@@ -22,6 +24,7 @@ async function userRegister(req, res) {
       await newUser.save();
 
       // User registration successful.
+      logger.info(`New user registered with email ${email}`);
       res.status(201).json({ message: "New user registered" });
     }
   } catch (err) {
@@ -50,13 +53,16 @@ async function userLogin(req, res) {
         });
 
         // Successful login, return a token.
+        logger.info(`User with email ${email} logged in.`);
         res.json({ message: "Logged in", token: token });
       } else {
         // Password does not match.
+        logger.error(`Login failed for user with email ${email}. Wrong password.`);
         res.status(401).json({ message: "Wrong password" });
       }
     } else {
       // User with the provided email does not exist.
+      logger.error(`Login failed. User with email ${email} not found.`);
       res.status(401).json({ message: "Wrong credentials" });
     }
   } catch (err) {
