@@ -1,5 +1,5 @@
 const express = require("express");
-const { authenticate } = require("../middlewares/authentication");
+const { authenticate, authorize } = require("../middlewares/authentication");
 const { otherLimiter } = require("../middlewares/rateLimiter");
 const {
   createBook,
@@ -9,13 +9,13 @@ const {
   borrowBook,
   returnBook,
   searchBooks,
-} = require("../controllers/admin");
+} = require("../controllers/book");
 
 const bookRouter = express.Router();
 
-bookRouter.post("/create", createBook);
-bookRouter.put("/update/:ISBN", updateBook);
-bookRouter.delete("/delete/:ISBN", deleteBook);
+bookRouter.post("/create", authenticate, authorize("admin"), createBook);
+bookRouter.put("/update/:ISBN", authenticate, authorize("admin"), updateBook);
+bookRouter.delete("/delete/:ISBN", authenticate, authorize("admin"), deleteBook);
 bookRouter.get("/books", listBooks);
 
 bookRouter.post("/borrow/:bookId", authenticate, otherLimiter, borrowBook);

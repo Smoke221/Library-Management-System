@@ -139,6 +139,13 @@ async function borrowBook(req, res) {
         .json({ message: "This book is currently not available." });
     }
 
+    // Check if the user has already borrowed this book
+    if (user.borrowedBooks.includes(bookId)) {
+      return res
+        .status(400)
+        .json({ message: "You have already borrowed this book." });
+    }
+
     // Reduce the book's quantity by 1
     book.quantity -= 1;
 

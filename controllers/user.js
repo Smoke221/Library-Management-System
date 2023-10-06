@@ -3,10 +3,9 @@ const jwt = require("jsonwebtoken");
 const { userModel } = require("../models/userModel");
 const { logger } = require("../middlewares/logger");
 
-
 async function userRegister(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Hash the user's password before saving it to the database.
     const hash = await bcrypt.hash(password, 10); // Use a stronger salt factor.
@@ -16,11 +15,13 @@ async function userRegister(req, res) {
 
     if (isExisting) {
       // User with the same email already exists, return an error.
-      logger.error(`User registration failed. User with email ${email} already exists.`);
+      logger.error(
+        `User registration failed. User with email ${email} already exists.`
+      );
       res.status(400).json({ message: "User already exists, please login" });
     } else {
       // Create a new user document with the hashed password.
-      const newUser = new userModel({ name, email, password: hash });
+      const newUser = new userModel({ name, email, password: hash, role });
       await newUser.save();
 
       // User registration successful.
@@ -48,16 +49,22 @@ async function userLogin(req, res) {
 
       if (passwordsMatch) {
         // Create a JWT token for the user's successful login.
-        const token = jwt.sign({ userID: user._id }, "secret", {
-          expiresIn: "1h", // Token expiration time (e.g., 1 hour)
-        });
+        const token = jwt.sign(
+          { userID: user._id, role: user.role },
+          "secret",
+          {
+            expiresIn: "1h", // Token expiration time (e.g., 1 hour)
+          }
+        );
 
         // Successful login, return a token.
         logger.info(`User with email ${email} logged in.`);
         res.json({ message: "Logged in", token: token });
       } else {
         // Password does not match.
-        logger.error(`Login failed for user with email ${email}. Wrong password.`);
+        logger.error(
+          `Login failed for user with email ${email}. Wrong password.`
+        );
         res.status(401).json({ message: "Wrong password" });
       }
     } else {

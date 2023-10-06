@@ -19,6 +19,11 @@ const userSchema = mongoose.Schema({
       ref: "book",
     },
   ],
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
 });
 
 const userModel = new mongoose.model("user", userSchema);
